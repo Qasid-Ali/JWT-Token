@@ -1,13 +1,17 @@
 require("dotenv").config();
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const bodyParser = require('body-parser');
+
 const cors = require('cors');
 
 const secretKey = "secretKey";
 
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.use(bodyParser.json());
 app.use(cors());
 
 app.get("/", (req, res) => {
@@ -32,12 +36,10 @@ app.get("/login", verifyToken, (req, res)=> {
 }) 
 
 app.post("/signup", (req, res) => {
-    const user = {
-        id: "1",
-        user: "user1",
-        email: "user1@gmail.com"
-    }
-    jwt.sign({user}, secretKey, {expiresIn: '300s'}, (err, token) => {
+
+  const receivedData = req.body;
+
+    jwt.sign({receivedData}, secretKey, {expiresIn: '300s'}, (err, token) => {
         res.json({
             token
         })
